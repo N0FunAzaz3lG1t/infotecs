@@ -1,0 +1,98 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+<!--colour of the page-->
+<style>
+    th{ 
+        cursor: pointer;
+        color:#fff;
+            }
+</style>
+
+
+<!--creating table-->
+<table class="table table-striped">
+    <tr  class="bg-info">
+        <th  class="bg-info" data-colname="firstName" data-order="desc">First Name &#9650</th>
+        <th  data-colname="lastName" data-order="desc">Last Name &#9650</th>
+        <th  data-colname="maidenName" data-order="desc">Maiden Name &#9650</th>
+        <th  data-colname="age" data-order="desc">Age &#9650</th>
+        <th  data-colname="gender" data-order="desc">Gender &#9650</th>
+        <th  data-colname="phone" data-order="desc">Phone Number &#9650</th>
+        <th  data-colname="address" data-order="desc">City &#9650</th>
+        <th  data-colname="address" data-order="desc">Address &#9650</th>
+    </tr>
+    <tbody id="myTable">
+
+    </tbody>
+</table>
+
+
+<script>
+// creating an array from url
+
+	var myArray = []
+
+	$.ajax({
+		method:'GET',
+		url:'https://dummyjson.com/users',
+		success:function(response){
+			myArray = response.users;
+			buildTable(myArray);
+			console.log(myArray);
+		}
+
+	})
+ 
+// sorting users
+
+    $('th').on('click', function(){
+        var column = $(this).data('colname')
+        var order = $(this).data('order')
+        var text = $(this).html()
+        text = text.substring(0, text.length - 1);
+        
+        if (order == 'desc'){
+            myArray = myArray.sort((a, b) => a[column] > b[column] ? 1 : -1)
+            $(this).data("order","asc");
+            text += '&#9660'
+        }else{
+            myArray = myArray.sort((a, b) => a[column] < b[column] ? 1 : -1)
+            $(this).data("order","desc");
+            text += '&#9650'
+        }
+
+        $(this).html(text)
+        buildTable(myArray)
+        })
+
+//creating buildTable function for an array
+
+    function buildTable(data){
+        var table = document.getElementById('myTable')
+        table.innerHTML = ''
+        for (var i = 0; i < data.length; i++){
+            var colname = `firstName-${i}`
+            var colage = `lastName-${i}`
+            var colname = `maidenName-${i}`
+            var colname = `age-${i}`
+            var colname = `gender-${i}`
+            var colname = `phone-${i}`
+            var colname = `address-${i}`
+            var colname = `address-${i}`
+
+            var row = `<tr>
+                            <td>${data[i].firstName}</td>
+                            <td>${data[i].lastName}</td>
+                            <td>${data[i].maidenName}</td>
+                            <td>${data[i].age}</td>
+                            <td>${data[i].gender}</td>
+                            <td>${data[i].phone}</td>
+                            <td>${data[i].address.city}</td>
+                            <td>${data[i].address.address}</td>
+                    </tr>`
+            table.innerHTML += row
+        }
+    }
+
+</script>
